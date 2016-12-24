@@ -1,0 +1,163 @@
+Terminals unused in grammar
+
+   END
+
+
+Grammar
+
+    0 $accept: request $end
+
+    1 request: requestLine messageHeader CRLF
+
+    2 requestLine: IDENT SP REQUEST_URI SP HTTP_VERSION CRLF
+
+    3 messageHeader: /* empty */
+    4              | IDENT CLN IDENT CRLF
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+SP (258) 2
+CRLF (259) 1 2 4
+END (260)
+IDENT (261) 2 4
+HTTP_VERSION (262) 2
+REQUEST_URI (263) 2
+CLN (264) 4
+
+
+Nonterminals, with rules where they appear
+
+$accept (10)
+    on left: 0
+request (11)
+    on left: 1, on right: 0
+requestLine (12)
+    on left: 2, on right: 1
+messageHeader (13)
+    on left: 3 4, on right: 1
+
+
+State 0
+
+    0 $accept: . request $end
+    1 request: . requestLine messageHeader CRLF
+    2 requestLine: . IDENT SP REQUEST_URI SP HTTP_VERSION CRLF
+
+    IDENT  shift, and go to state 1
+
+    request      go to state 2
+    requestLine  go to state 3
+
+
+State 1
+
+    2 requestLine: IDENT . SP REQUEST_URI SP HTTP_VERSION CRLF
+
+    SP  shift, and go to state 4
+
+
+State 2
+
+    0 $accept: request . $end
+
+    $end  shift, and go to state 5
+
+
+State 3
+
+    1 request: requestLine . messageHeader CRLF
+    3 messageHeader: .  [CRLF]
+    4              | . IDENT CLN IDENT CRLF
+
+    IDENT  shift, and go to state 6
+
+    $default  reduce using rule 3 (messageHeader)
+
+    messageHeader  go to state 7
+
+
+State 4
+
+    2 requestLine: IDENT SP . REQUEST_URI SP HTTP_VERSION CRLF
+
+    REQUEST_URI  shift, and go to state 8
+
+
+State 5
+
+    0 $accept: request $end .
+
+    $default  accept
+
+
+State 6
+
+    4 messageHeader: IDENT . CLN IDENT CRLF
+
+    CLN  shift, and go to state 9
+
+
+State 7
+
+    1 request: requestLine messageHeader . CRLF
+
+    CRLF  shift, and go to state 10
+
+
+State 8
+
+    2 requestLine: IDENT SP REQUEST_URI . SP HTTP_VERSION CRLF
+
+    SP  shift, and go to state 11
+
+
+State 9
+
+    4 messageHeader: IDENT CLN . IDENT CRLF
+
+    IDENT  shift, and go to state 12
+
+
+State 10
+
+    1 request: requestLine messageHeader CRLF .
+
+    $default  reduce using rule 1 (request)
+
+
+State 11
+
+    2 requestLine: IDENT SP REQUEST_URI SP . HTTP_VERSION CRLF
+
+    HTTP_VERSION  shift, and go to state 13
+
+
+State 12
+
+    4 messageHeader: IDENT CLN IDENT . CRLF
+
+    CRLF  shift, and go to state 14
+
+
+State 13
+
+    2 requestLine: IDENT SP REQUEST_URI SP HTTP_VERSION . CRLF
+
+    CRLF  shift, and go to state 15
+
+
+State 14
+
+    4 messageHeader: IDENT CLN IDENT CRLF .
+
+    $default  reduce using rule 4 (messageHeader)
+
+
+State 15
+
+    2 requestLine: IDENT SP REQUEST_URI SP HTTP_VERSION CRLF .
+
+    $default  reduce using rule 2 (requestLine)
